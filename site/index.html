@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>جداول الأفعال العربية</title>
+  <meta name="description" content="قاعدة بيانات تفاعلية للأفعال العربية: جذورها وأوزانها وتعديتها." />
+  <link rel="stylesheet" href="assets/fonts/noto-naskh-arabic.css" />
+  <link rel="stylesheet" href="assets/styles.css" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <h1>جداول الأفعال العربية</h1>
+      <p class="intro">
+        قاعدة بيانات تفاعلية تضمّ <strong>24,190</strong> فعلًا عربيًّا مع جذورها وأوزانها وتعديتها —
+        <a href="https://github.com/M-Bakni/Arabic-Morphology">المستودع على GitHub</a>
+      </p>
+      <p class="credits">
+        إعداد المحتوى: مروان البواب، يحيى مير علم · معالجة البيانات والنشر: ميشيل بكني، وائل تلات ·
+        الرخصة: CC BY 4.0
+      </p>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="panel">
+      <div class="panel-stats" id="stats">جارٍ التحميل…</div>
+
+      <div class="filters">
+        <input type="text" id="search" placeholder="ابحث في الجذر أو الفعل…" />
+        <select id="filterCat" aria-label="ثلاثي أو رباعي"><option value="">ثلاثي/رباعي</option></select>
+        <select id="filterDeriv" aria-label="مجرّد أو مزيد"><option value="">مجرّد/مزيد</option></select>
+        <select id="filterPattern" aria-label="الوزن"><option value="">كل الأوزان</option></select>
+        <select id="filterTrans" aria-label="التعدية"><option value="">كل أنواع التعدية</option></select>
+        <button id="resetFilters" type="button">تصفير</button>
+        <span class="counter" id="counter"></span>
+      </div>
+
+      <div class="table-mount" id="tableMount"></div>
+    </section>
+
+    <footer class="downloads">
+      <span>البيانات الأصلية (جداول الجذور) ومصدر الأكواد على
+        <a href="https://github.com/M-Bakni/Arabic-Morphology">GitHub</a>.</span>
+    </footer>
+  </main>
+
+  <script type="module" src="assets/app.js"></script>
+</body>
+</html>

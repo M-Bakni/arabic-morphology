@@ -1,0 +1,128 @@
+:root {
+  --bg: #f7f6f3;
+  --surface: #ffffff;
+  --ink: #1f2328;
+  --muted: #6b7280;
+  --border: #e3e1dc;
+  --accent: #1d6a5c;
+  --accent-ink: #ffffff;
+
+  --row-h: 38px;
+
+  /* Table column widths (minmax: floor px + flex share). --grid-min ~= sum of floors. */
+  --w-verb: minmax(140px, 1.4fr);
+  --w-root: minmax(82px, 1fr);
+  --w-cat: minmax(96px, 1fr);
+  --w-deriv: minmax(96px, 1fr);
+  --w-pattern: minmax(104px, 1.2fr);
+  --w-trans: minmax(96px, 0.9fr);
+  --grid-min: 614px;
+}
+
+* { box-sizing: border-box; }
+html { direction: rtl; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: Calibri, "Noto Naskh Arabic", "Segoe UI", Tahoma, "Geeza Pro", Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.5;
+}
+a { color: var(--accent); }
+
+.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+main.wrap { padding-top: 16px; padding-bottom: 48px; }
+
+/* Header */
+.site-header { background: var(--accent); color: var(--accent-ink); padding: 22px 0; }
+.site-header h1 { margin: 0 0 4px; font-size: 1.5rem; }
+.site-header .intro { margin: 0; opacity: 0.95; }
+.site-header .intro a { color: #d6efe8; }
+.credits { margin: 10px 0 0; font-size: 0.82rem; opacity: 0.85; }
+
+/* Panel */
+.panel {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 12px; padding: 16px;
+}
+.panel-stats { font-size: 0.95rem; margin-bottom: 12px; }
+
+/* Filters */
+.filters {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px;
+}
+.filters input, .filters select, .filters button {
+  font-family: inherit; font-size: 0.92rem; padding: 7px 10px;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink);
+}
+.filters input:focus, .filters select:focus { outline: 2px solid var(--accent); border-color: var(--accent); }
+.filters select { cursor: pointer; }
+.filters #search { min-width: 220px; flex: 1 1 220px; }
+.filters button { cursor: pointer; background: #f0efeb; }
+.filters button:hover { border-color: var(--accent); }
+.counter { margin-inline-start: auto; color: var(--muted); font-size: 0.88rem; white-space: nowrap; }
+
+/* Table */
+.table-view {
+  width: 100%;
+  border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
+}
+.table-viewport { height: 68vh; min-height: 320px; overflow: auto; }
+.table-grid { width: 100%; min-width: var(--grid-min); }
+
+.table-row { display: grid; width: 100%; height: var(--row-h); border-bottom: 1px solid var(--border); }
+.cell {
+  display: flex; align-items: center; padding: 0 8px;
+  overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+}
+.col-verb { font-weight: 600; font-size: 1.02rem; }
+
+/* Sticky first column */
+.col-sticky {
+  position: sticky; right: 0; z-index: 1;
+  background: var(--surface); border-inline-end: 1px solid var(--border);
+}
+
+/* Sticky header */
+.table-head {
+  position: sticky; top: 0; z-index: 2; background: #f0efeb;
+  font-size: 0.85rem; font-weight: 600; color: #41464d;
+  border-bottom: 2px solid var(--border);
+}
+.table-head .col-sticky { background: #f0efeb; z-index: 3; }
+.table-head .sortable { cursor: pointer; user-select: none; }
+.table-head .sortable:hover { color: var(--accent); }
+.table-head .sorted-asc::after { content: "▲"; font-size: 0.62em; margin-inline-start: 5px; opacity: 0.75; }
+.table-head .sorted-desc::after { content: "▼"; font-size: 0.62em; margin-inline-start: 5px; opacity: 0.75; }
+
+.table-spacer { position: relative; }
+.table-body { position: absolute; inset-inline: 0; top: 0; }
+
+/* Downloads */
+.downloads {
+  margin-top: 18px; font-size: 0.85rem; color: var(--muted);
+  display: flex; flex-wrap: wrap; gap: 6px; align-items: baseline;
+}
+
+.error { color: #b42318; padding: 16px; }
+
+@media (max-width: 600px) {
+  body { font-size: 14px; }
+  .filters #search { min-width: 100%; }
+  .counter { margin-inline-start: 0; }
+  .table-viewport { height: 64vh; }
+
+  /* Tighter columns so الفعل no longer dominates on small screens. */
+  :root {
+    --w-verb: minmax(104px, 1fr);
+    --w-root: minmax(72px, 0.9fr);
+    --w-cat: minmax(84px, 1fr);
+    --w-deriv: minmax(84px, 1fr);
+    --w-pattern: minmax(88px, 1.1fr);
+    --w-trans: minmax(84px, 0.9fr);
+    --grid-min: 516px;
+  }
+  .col-verb { font-size: 0.98rem; }
+}
