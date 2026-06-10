@@ -19,6 +19,7 @@ const els = {
   counter: document.getElementById('counter'),
   stats: document.getElementById('stats'),
   mount: document.getElementById('tableMount'),
+  vowelPosition: document.getElementById('Vposition'),
 };
 
 let ALL = [];
@@ -60,7 +61,65 @@ async function init() {
   [els.pattern, els.trans].forEach((s) => s.addEventListener('change', applyFilters));
   els.reset.addEventListener('click', resetFilters);
 
+  // Load and inject SVG before adding the event listener
+  await inlineSVG();
+
+  if (els.vowelPosition) {
+    els.vowelPosition.addEventListener('change', updateSVGLineColors);
+  }
+
   applyFilters();
+}
+
+// Function to fetch and inject SVG inline so we can manipulate it
+async function inlineSVG() {
+  try {
+    const response = await fetch('Cir 2.svg');
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const svgDoc = parser.parseFromString(svgText, 'image/svg+xml');
+    const svg = svgDoc.documentElement;
+    
+    // Find the image container
+    const imageContainer = document.querySelector('.image-container');
+    if (imageContainer) {
+      // Find the img tag that points to Cir 2.svg
+      const imgTag = imageContainer.querySelector('img[src="Cir 2.svg"]');
+      if (imgTag) {
+        // Get the original dimensions from the img tag
+        const originalWidth = imgTag.getAttribute('width');
+        const originalHeight = imgTag.getAttribute('height');
+        
+        // Set the SVG dimensions to match the original img tag
+        if (originalWidth) svg.setAttribute('width', originalWidth);
+        if (originalHeight) svg.setAttribute('height', originalHeight);
+        // Replace the img tag with the inline SVG
+        imgTag.replaceWith(svg);
+      } else {
+        // If no img tag found, just append the SVG
+        imageContainer.appendChild(svg);
+      }
+    }
+    
+    console.log('Cir 2.svg loaded and injected successfully');
+    return svg;
+  } catch (error) {
+    console.error('Error loading SVG:', error);
+    return null;
+  }
+}
+
+function updateSVGLineColors() {
+  const path4488 = document.getElementById('path4488');
+  const path4486 = document.getElementById('path4486');
+  
+  if (els.vowelPosition && els.vowelPosition.value === 'middle') {
+    if (path4488) path4488.style.stroke = '#ffff00';
+    if (path4486) path4486.style.stroke = '#ffff00';
+  } else {
+    if (path4488) path4488.style.stroke = '#000000';
+    if (path4486) path4486.style.stroke = '#000000';
+  }
 }
 
 function columns() {
