@@ -32,7 +32,10 @@ body {
 }
 a { color: var(--accent); }
 
-.wrap { max-width: 1100px; margin: 0 auto; padding: 0 16px; }
+.wrap {
+  margin: 0 auto; 
+  padding: 0 16px; 
+ }
 main.wrap { padding-top: 16px; padding-bottom: 48px; }
 
 /* Header */
@@ -46,12 +49,49 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 .panel {
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px;
+  display: grid; grid-template-columns: 55% 45%;
 }
-.panel-stats { font-size: 0.95rem; margin-bottom: 12px; }
+.panel-stats {grid-column: 1; font-size: 0.95rem; margin-bottom: 12px; }
 
+.control-panel {
+  display: flex;
+  flex-direction: column;
+}
+
+
+.dynamic-filter {
+  height: 30%;
+  padding-right: 5%;
+  display: flex;
+  gap: 5px;
+}
+.dynamic-filter select {
+  height: 35px;
+  font-family: inherit; font-size: 0.92rem; padding: 7px 10px;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink);
+}
+.download {
+  height: 100%;
+  font-family: inherit; font-size: 0.92rem; padding: 7px 10px;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink);
+  cursor: pointer; background: #f0efeb;
+}
+
+.download:hover { border-color: var(--accent); }
+
+.letter-box {
+  padding-left: 10px;
+  padding-right: 10px;
+  border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink);
+}
+.image-container {
+  display: grid;
+  padding-right: 5%;
+  grid-template-columns: 50% 50%;
+}
 /* Filters */
 .filters {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 14px;
+  flex-flow: nowrap column; gap: 8px; align-items: center; margin-bottom: 14px;
 }
 .filters input, .filters select, .filters button {
   font-family: inherit; font-size: 0.92rem; padding: 7px 10px;
@@ -64,9 +104,11 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 .filters button:hover { border-color: var(--accent); }
 .counter { margin-inline-start: auto; color: var(--muted); font-size: 0.88rem; white-space: nowrap; }
 
+
 /* Table */
 .table-view {
-  width: 100%;
+  width: auto;
+  height: max-content;
   border: 1px solid var(--border); border-radius: 10px; overflow: hidden;
 }
 .table-viewport { height: 68vh; min-height: 320px; overflow: auto; }
