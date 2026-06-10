@@ -25,18 +25,82 @@
 
   <main class="wrap">
     <section class="panel">
-      <div class="panel-stats" id="stats">جارٍ التحميل…</div>
+      <section class="control-panel">
+        <div class="panel-stats" id="stats">جارٍ التحميل…</div>
 
-      <div class="filters">
-        <input type="text" id="search" placeholder="ابحث في الجذر أو الفعل…" />
-        <select id="filterCat" aria-label="ثلاثي أو رباعي"><option value="">ثلاثي/رباعي</option></select>
-        <select id="filterDeriv" aria-label="مجرّد أو مزيد"><option value="">مجرّد/مزيد</option></select>
-        <select id="filterPattern" aria-label="الوزن"><option value="">الأبواب والأوزان</option></select>
-        <select id="filterTrans" aria-label="التعدية"><option value="">اللزوم والتعدية</option></select>
-        <button id="resetFilters" type="button">تصفير</button>
-        <span class="counter" id="counter"></span>
-      </div>
-
+        <div class="filters">
+          <input type="text" id="search" placeholder="ابحث في الجذر أو الفعل…" />
+          <select id="filterCat" aria-label="ثلاثي أو رباعي"><option value="">Default 1</option></select> <!--ثلاثي/رباعي-->
+          <select id="filterDeriv" aria-label="مجرّد أو مزيد"><option value="">Default 2</option></select> <!--مجرّد/مزيد-->
+          <select id="filterPattern" aria-label="الوزن"><option value="">Default 3</option></select> <!--الأبواب والأوزان-->
+          <select id="filterTrans" aria-label="التعدية"><option value="">Default 4</option></select> <!--اللزوم والتعدية-->
+          <button id="resetFilters" type="button">Reset</button> <!--تصفير-->
+          <span class="counter" id="counter"></span>
+        </div>
+        <div class="dynamic-filter">
+            <select name="vowel" id="vowel"><option value="">?Vowel or not</option>
+              <option value="vowel">Vowel</option>
+              <option value="non-vowel">Non-vowel</option>
+            </select>
+            <div class="letter-box">
+              <p>Starts with <select name="letter1" id="letter"><option value="">Def5</option>
+                <option value="أ">أ</option>
+                <option value="ب">ب</option>
+                <option value="ت">ت</option>
+                <option value="ث">ث</option>
+                <option value="ج">ج</option>
+                <option value="ح">ح</option>
+                <option value="خ">خ</option>
+                <option value="د">د</option>
+                <option value="ذ">ذ</option>
+                <option value="ر">ر</option>
+                <option value="ز">ز</option>
+                <option value="س">س</option>
+                <option value="ش">ش</option>
+                <option value="ص">ص</option>
+                <option value="ض">ض</option>
+                <option value="ط">ط</option>
+                <option value="ظ">ظ</option>
+                <option value="ع">ع</option>
+                <option value="غ">غ</option>
+                <option value="ف">ف</option>
+                <option value="ق">ق</option>
+                <option value="ك">ك</option>
+                <option value="ل">ل</option>
+                <option value="م">م</option>
+                <option value="ن">ن</option>
+                <option value="ه">ه</option>
+                <option value="و">و</option>
+                <option value="ي">ي</option>
+              </select></p>
+              <p>Middle letter <select name="letter2" id="letter"><option value="">Def6</option></select></p>
+              <p>Ends with <select name="letter3" id="letter"><option value="">Def7</option></select></p>
+            </div>
+            <div class="letter-box">
+              <p>?Where is the vowel <select name="position" id="Vposition"><option value="">Def8</option>
+                <option value="start">Start</option>
+                <option value="middle">Middle</option>
+                <option value="end">End</option>
+                <option value="double">Double</option>
+              </select></p>
+              <p>?What vowel<select name="letter1" id="letter"><option value="">Def9</option>
+                <option value="O">O</option>
+                <option value="I">I</option>
+                <option value="Both">Both</option>
+              </select></p>
+              <p>?What are the positions<select name="letter1" id="letter"><option value="">Def9</option>
+                <option value="start">1, 2</option>
+                <option value="middle">1, 3</option>
+                <option value="end">2, 3</option>
+              </select></p>
+            </div>
+        </div>
+        <div class="image-container">
+          <img src="Circle 1.svg" alt="wheel?" height="285" width="285"/>
+          <img src="Cir 2.svg" alt="wheel?" height="285" width="285"/>  
+        </div>
+        <button class="download" id="download" type="button">Download</button>
+      </section>
       <div class="table-mount" id="tableMount"></div>
     </section>
 
