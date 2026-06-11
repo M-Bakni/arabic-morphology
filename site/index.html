@@ -99,7 +99,18 @@
           <img src="Circle 1.svg" alt="wheel?" height="285" width="285"/>
           <img src="Cir 2.svg" alt="wheel?" height="285" width="285"/>  
         </div>
-        <button class="download" id="download" type="button">Download</button>
+        <button class="download" id="download" type="button">Download <img src="download icon.png" alt=""></button>
+        <div id="downloadModal" class="modal" style="display: none;">
+          <div class="modal-content">
+            <span class="close-modal">&times;</span>
+            <h3>Choose Download Format</h3>
+            <div class="modal-options">
+              <button class="modal-option" data-format="csv">CSV <span>Excel / Spreadsheet</span></button>
+              <button class="modal-option" data-format="json">JSON <span>JavaScript Object Format</span></button>
+              <button class="modal-option" data-format="txt">TXT <span>Plain Text</span></button>
+            </div>
+          </div>
+        </div>
       </section>
       <div class="table-mount" id="tableMount"></div>
     </section>
