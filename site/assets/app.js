@@ -92,7 +92,7 @@ async function init() {
 function populateLetterDropdowns() {
   const letters = ['أ','ب','ت','ث','ج','ح','خ','د','ذ','ر','ز','س','ش','ص','ض','ط','ظ','ع','غ','ف','ق','ك','ل','م','ن','ه','و','ي'];
 
-  const letterSelects = ['letter1', 'letter2', 'letter3', 'letter4'];
+  const letterSelects = ['letter1', 'letter2', 'letter3'];
 
   letterSelects.forEach(selectId => {
     const select = document.getElementById(selectId);
