@@ -265,7 +265,7 @@ function updateList6() {
         </select><br>
         <label><input type="checkbox" id="Opt40">مهموز الفاء</label><br>
         <label><input type="checkbox" id="Opt41">مهموز العين</label><br>
-        <label><input type="checkbox" id="Opt42">مهموز الفاء</label><br>
+        <label><input type="checkbox" id="Opt42">مهموز اللام</label><br>
         <label><input type="checkbox" id="Opt43">مُضعَّف</label>
       </p>
       <div id="patternContainer" style="display: none;">
@@ -309,7 +309,7 @@ function updateList6() {
     list6.innerHTML = `
       <label><input type="checkbox" id="Opt40">مهموز الفاء</label><br>
       <label><input type="checkbox" id="Opt41">مهموز العين</label><br>
-      <label><input type="checkbox" id="Opt42">مهموز الفاء</label><br>
+      <label><input type="checkbox" id="Opt42">مهموز اللام</label><br>
       <label><input type="checkbox" id="Opt43">مُضعَّف</label>
     `;
     updateControlBoxBorders();
