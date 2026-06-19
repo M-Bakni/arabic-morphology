@@ -50,7 +50,6 @@ async function init() {
   fillSelect(els.deriv, Object.entries(DERIV_LABEL).map(([v, l]) => [v, l]));
   fillSelect(els.trans, Object.entries(TRANS_LABEL).map(([v, l]) => [v, l]));
 
-  // Store all patterns from data (used when no category is selected)
   allPatterns = distinct(ALL, FIELD.pattern).map((p) => p);
 
   COLS = columns();
@@ -74,7 +73,6 @@ async function init() {
       updateControlBoxBorders();
     }));
 
-  // trans filter still uses dropdown
   els.trans.addEventListener('change', applyFilters);
   els.reset.addEventListener('click', resetFilters);
 
@@ -84,6 +82,14 @@ async function init() {
   if (els.vowelPosition) {
     els.vowelPosition.addEventListener('change', updateSVGLineColors);
   }
+
+  // ★ ADD THIS: Listen for radio changes inside list6
+  const list6 = document.getElementById('list6');
+  list6.addEventListener('change', function(e) {
+    if (e.target.matches('input[name="hamzahDouble"]')) {
+      applyFilters();
+    }
+  });
 
   // Initialize dynamic filters
   updateList5();
@@ -244,14 +250,18 @@ function updateList6() {
   // ---------- Vowel toggle OFF ----------
   if (!vowelToggle || !vowelToggle.checked) {
     list6.innerHTML = `
-      <label><input type="checkbox" id="Opt40">مهموز الفاء</label><br>
-      <label><input type="checkbox" id="Opt41">مهموز العين</label><br>
-      <label><input type="checkbox" id="Opt42">مهموز اللام</label><br>
-      <label><input type="checkbox" id="Opt43">مُضعَّف</label>
+      <div id="hamzahDoubleGroupOff">
+        <div><label><input type="radio" name="hamzahDouble" value="" checked>الكل</label></div>
+        <div id="wrapOpt40"><label><input type="radio" name="hamzahDouble" value="opt40"> مهموز الفاء</label></div>
+        <div id="wrapOpt41"><label><input type="radio" name="hamzahDouble" value="opt41"> مهموز العين</label></div>
+        <div id="wrapOpt42"><label><input type="radio" name="hamzahDouble" value="opt42"> مهموز اللام</label></div>
+        <div id="wrapOpt43"><label><input type="radio" name="hamzahDouble" value="opt43"> مُضعَّف</label></div>
+      </div>
     `;
-    list6.querySelectorAll('input[type="checkbox"]').forEach(el => {
-      el.removeEventListener('change', applyFilters);
-      el.addEventListener('change', applyFilters);
+    // Show all options when toggle is off (no vowel filter)
+    ['wrapOpt40', 'wrapOpt41', 'wrapOpt42', 'wrapOpt43'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.style.display = '';
     });
     applyFilters();
     updateControlBoxBorders();
@@ -278,10 +288,13 @@ function updateList6() {
           <option value="i">الياء</option>
         </select>
       </p>
-      <div id="wrapOpt40" style="display:none;"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
-      <div id="wrapOpt41" style="display:none;"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
-      <div id="wrapOpt42" style="display:none;"><label><input type="checkbox" id="Opt42">مهموز اللام</label></div>
-      <div id="wrapOpt43" style="display:none;"><label><input type="checkbox" id="Opt43">مُضعَّف</label></div>
+      <div id="hamzahDoubleGroup" style="display:none;">
+        <div><label><input type="radio" name="hamzahDouble" value="" checked>الكل</label></div>
+        <div id="wrapOpt40"><label><input type="radio" name="hamzahDouble" value="opt40"> مهموز الفاء</label></div>
+        <div id="wrapOpt41"><label><input type="radio" name="hamzahDouble" value="opt41"> مهموز العين</label></div>
+        <div id="wrapOpt42"><label><input type="radio" name="hamzahDouble" value="opt42"> مهموز اللام</label></div>
+        <div id="wrapOpt43"><label><input type="radio" name="hamzahDouble" value="opt43"> مُضعَّف</label></div>
+      </div>
     </div>
     <div id="patternContainer" style="display: none;">
       <p>نوع اللفيف 
@@ -291,8 +304,11 @@ function updateList6() {
           <option value="seperate">مفروق</option>
         </select>
       </p>
-      <div id="wrapOpt40p" style="display:none;"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
-      <div id="wrapOpt41p" style="display:none;"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
+      <div id="hamzahDoubleGroupPattern" style="display:none;">
+        <div><label><input type="radio" name="hamzahDouble" value="" checked>الكل</label></div>
+        <div id="wrapOpt40p"><label><input type="radio" name="hamzahDouble" value="opt40"> مهموز الفاء</label></div>
+        <div id="wrapOpt41p"><label><input type="radio" name="hamzahDouble" value="opt41"> مهموز العين</label></div>
+      </div>
     </div>
   `;
 
@@ -303,68 +319,88 @@ function updateList6() {
   const vowelType = document.getElementById('vowelTypeSelect');
   const vowelPattern = document.getElementById('vowelPatternSelect');
 
-  // ----- Helper: update checkboxes inside vowel-type container -----
-  function updateVowelCheckboxes() {
+  // Helper: update visibility of radio wrappers in vowel‑type group
+  function updateVowelRadioVisibility() {
     const pos = vowelPosition ? vowelPosition.value : '';
     const typeVal = vowelType ? vowelType.value : '';
+    const group = document.getElementById('hamzahDoubleGroup');
+    if (!group) return;
 
-    // Hide all wrappers first
-    const w40 = document.getElementById('wrapOpt40');
-    const w41 = document.getElementById('wrapOpt41');
-    const w42 = document.getElementById('wrapOpt42');
-    const w43 = document.getElementById('wrapOpt43');
-    if (!w40) return;
-
-    // Default: all hidden
-    w40.style.display = 'none';
-    w41.style.display = 'none';
-    w42.style.display = 'none';
-    w43.style.display = 'none';
-
-    // Only show checkboxes if a position is selected, it's not "double", AND a vowel type is chosen
+    // Show the group only if position is valid (non‑double) and a vowel type is chosen
     if (pos && pos !== 'double' && typeVal) {
+      group.style.display = '';
+      const w40 = document.getElementById('wrapOpt40');
+      const w41 = document.getElementById('wrapOpt41');
+      const w42 = document.getElementById('wrapOpt42');
+      const w43 = document.getElementById('wrapOpt43');
+      // Hide all first
+      [w40, w41, w42, w43].forEach(el => { if (el) el.style.display = 'none'; });
+      // Show according to position AND (for start) vowel type
       if (pos === 'start') {
-        w41.style.display = ''; // Opt41
-        w42.style.display = ''; // Opt42
-        w43.style.display = ''; // Opt43
+        if (w41) w41.style.display = '';
+        // ★ opt42 only for واو (o)
+        if (w42) w42.style.display = (typeVal === 'o') ? '' : 'none';
+        if (w43) w43.style.display = '';
       } else if (pos === 'middle') {
-        w40.style.display = ''; // Opt40
-        w42.style.display = ''; // Opt42
+        if (w40) w40.style.display = '';
+        if (w42) w42.style.display = '';
       } else if (pos === 'end') {
-        w40.style.display = ''; // Opt40
-        w41.style.display = ''; // Opt41
+        if (w40) w40.style.display = '';
+        if (w41) w41.style.display = '';
       }
+      // If the currently checked radio is hidden, reset to "none"
+      const checkedRadio = document.querySelector('input[name="hamzahDouble"]:checked');
+      if (checkedRadio) {
+        const wrapper = checkedRadio.closest('div[id^="wrapOpt"]');
+        if (wrapper && wrapper.style.display === 'none') {
+          const noneRadio = document.querySelector('input[name="hamzahDouble"][value=""]');
+          if (noneRadio) noneRadio.checked = true;
+        }
+      }
+    } else {
+      group.style.display = 'none';
+      const noneRadio = document.querySelector('input[name="hamzahDouble"][value=""]');
+      if (noneRadio) noneRadio.checked = true;
     }
   }
 
-  // ----- Helper: update checkboxes inside pattern container -----
-  function updatePatternCheckboxes() {
+  // Helper: update visibility of radio wrappers in pattern (double) group
+  function updatePatternRadioVisibility() {
     const pos = vowelPosition ? vowelPosition.value : '';
     const patVal = vowelPattern ? vowelPattern.value : '';
+    const group = document.getElementById('hamzahDoubleGroupPattern');
+    if (!group) return;
 
-    const w40p = document.getElementById('wrapOpt40p');
-    const w41p = document.getElementById('wrapOpt41p');
-    if (!w40p) return;
-
-    // Hide both
-    w40p.style.display = 'none';
-    w41p.style.display = 'none';
-
-    // Only show if position is "double" and a pattern is chosen
     if (pos === 'double' && patVal) {
-      if (patVal === 'grouped') {
-        w40p.style.display = '';
-      } else if (patVal === 'seperate') {
-        w41p.style.display = '';
+      group.style.display = '';
+      const w40p = document.getElementById('wrapOpt40p');
+      const w41p = document.getElementById('wrapOpt41p');
+      // Hide both
+      if (w40p) w40p.style.display = 'none';
+      if (w41p) w41p.style.display = 'none';
+      // Show based on pattern
+      if (patVal === 'grouped' && w40p) w40p.style.display = '';
+      else if (patVal === 'seperate' && w41p) w41p.style.display = '';
+      // Reset if checked radio is hidden
+      const checkedRadio = document.querySelector('input[name="hamzahDouble"]:checked');
+      if (checkedRadio) {
+        const wrapper = checkedRadio.closest('div[id^="wrapOpt"]');
+        if (wrapper && wrapper.style.display === 'none') {
+          const noneRadio = document.querySelector('input[name="hamzahDouble"][value=""]');
+          if (noneRadio) noneRadio.checked = true;
+        }
       }
+    } else {
+      group.style.display = 'none';
+      const noneRadio = document.querySelector('input[name="hamzahDouble"][value=""]');
+      if (noneRadio) noneRadio.checked = true;
     }
   }
 
-  // ----- Main handler for position change -----
+  // Main handler for position change
   function handlePositionChange() {
     const val = vowelPosition ? vowelPosition.value : '';
 
-    // Toggle container visibility
     if (vowelTypeContainer) {
       vowelTypeContainer.style.display = (val && val !== 'double') ? '' : 'none';
     }
@@ -372,46 +408,36 @@ function updateList6() {
       patternContainer.style.display = (val === 'double') ? 'block' : 'none';
     }
 
-    // Update checkboxes based on current dropdown values
-    updateVowelCheckboxes();
-    updatePatternCheckboxes();
-
+    updateVowelRadioVisibility();
+    updatePatternRadioVisibility();
     applyFilters();
   }
 
-  // ----- Handlers for dropdown changes (vowel type & pattern) -----
+  // Handlers for dropdown changes
   function onVowelTypeChange() {
-    updateVowelCheckboxes();
+    updateVowelRadioVisibility();
     applyFilters();
   }
 
   function onPatternChange() {
-    updatePatternCheckboxes();
+    updatePatternRadioVisibility();
     applyFilters();
   }
 
-  // ----- Attach events -----
+  // Attach events
   if (vowelPosition) {
     vowelPosition.removeEventListener('change', handlePositionChange);
     vowelPosition.addEventListener('change', handlePositionChange);
-    handlePositionChange();
+    handlePositionChange(); // initial setup
   }
-
   if (vowelType) {
     vowelType.removeEventListener('change', onVowelTypeChange);
     vowelType.addEventListener('change', onVowelTypeChange);
   }
-
   if (vowelPattern) {
     vowelPattern.removeEventListener('change', onPatternChange);
     vowelPattern.addEventListener('change', onPatternChange);
   }
-
-  // Attach listeners to all checkboxes
-  list6.querySelectorAll('input[type="checkbox"]').forEach(el => {
-    el.removeEventListener('change', applyFilters);
-    el.addEventListener('change', applyFilters);
-  });
 
   updateControlBoxBorders();
 }
@@ -514,14 +540,21 @@ function getCheckedState(id) {
 
 function applyFilters() {
   SVGFilters();
+
   const q = normalizeArabic(els.search.value);
   const cat = els.cat.value;
   const deriv = els.deriv.value;
   const trans = els.trans.value;
 
+  // Read selected radio value
+  const hamzahRadio = document.querySelector('input[name="hamzahDouble"]:checked');
+  const hamzahVal = hamzahRadio ? hamzahRadio.value : '';
+
+  // Pattern checkboxes (unchanged)
   const selectedPatterns = Array.from(document.querySelectorAll('#list8 input[type="checkbox"]:checked'))
                                  .map(cb => cb.value);
 
+  // Letter filters
   const letter1 = document.getElementById('letter1')?.value || '';
   const letter2 = document.getElementById('letter2')?.value || '';
   const letter3 = document.getElementById('letter3')?.value || '';
@@ -535,11 +568,6 @@ function applyFilters() {
   const vowelPosition = document.getElementById('vowelPositionSelect')?.value || '';
   const vowelType = document.getElementById('vowelTypeSelect')?.value || '';
   const vowelPattern = document.getElementById('vowelPatternSelect')?.value || '';
-
-  const opt40 = getCheckedState('Opt40');
-  const opt41 = getCheckedState('Opt41');
-  const opt42 = getCheckedState('Opt42');
-  const opt43 = getCheckedState('Opt43');
 
   const filtered = ALL.filter((r) => {
     if (cat && r[FIELD.cat] !== cat) return false;
@@ -567,10 +595,9 @@ function applyFilters() {
       }
     }
 
-    // Vowel filter (only for trilateral)
+    // Vowel filters (unchanged)
     if (cat === 'tri' && showVowelOnly) {
       const isVowel = (ch) => /[وي]/.test(ch);
-      setOpacityByID(circle2, "Vowel", 1.0);
       const matchesType = (ch) => {
         if (!vowelType) return isVowel(ch);
         if (vowelType === 'o') return ch === 'و';
@@ -586,14 +613,11 @@ function applyFilters() {
 
       if (vowelPosition === 'start') {
         if (!isOnlyVowelAt(0)) return false;
-      }
-      else if (vowelPosition === 'middle') {
+      } else if (vowelPosition === 'middle') {
         if (!isOnlyVowelAt(1)) return false;
-      }
-      else if (vowelPosition === 'end') {
+      } else if (vowelPosition === 'end') {
         if (!isOnlyVowelAt(2)) return false;
-      }
-      else if (vowelPosition === 'double') {
+      } else if (vowelPosition === 'double') {
         const vowelCount = [root[0], root[1], root[2]].filter(isVowel).length;
         if (vowelCount < 2) return false;
         const middleIsVowel = isVowel(root[1]);
@@ -602,18 +626,17 @@ function applyFilters() {
         } else if (vowelPattern === 'seperate') {
           if (middleIsVowel) return false;
         }
-      }
-      else {
+      } else {
         if (!/[وي]/.test(root)) return false;
       }
     }
 
-    if (rootLength >= 3) {
-      if (opt40 && root[0] !== 'أ') return false;
-      if (opt41 && root[1] !== 'أ') return false;
-      if (opt42 && root[2] !== 'أ') return false;
-      if (opt43 && root[1] !== root[2]) return false;
-    }
+    // ----- Hamzah / doubled filter (radio) -----
+    if (hamzahVal === 'opt40' && root[0] !== 'أ') return false;
+    if (hamzahVal === 'opt41' && root[1] !== 'أ') return false;
+    if (hamzahVal === 'opt42' && root[2] !== 'أ') return false;
+    if (hamzahVal === 'opt43' && root[1] !== root[2]) return false;
+    // if hamzahVal is '' (none) -> no filter
 
     return true;
   });
@@ -651,6 +674,9 @@ function resetFilters() {
   if (vowelToggle) vowelToggle.checked = false;
   const doubleToggle = document.getElementById('doubleToggle');
   if (doubleToggle) doubleToggle.checked = false;
+
+  const defaultRadio = document.querySelector('input[name="hamzahDouble"][value=""]');
+  if (defaultRadio) defaultRadio.checked = true;
 
   // Clear list6
   const list6 = document.getElementById('list6');
@@ -844,143 +870,77 @@ function resetGroupOpacity(svg, groupId) {
   }
 }
 
-function SVGFilters(){
+function SVGFilters() {
   resetGroupOpacity(circle2, "Highlight");
-  const q = normalizeArabic(els.search.value);
+
+  const hamzahRadio = document.querySelector('input[name="hamzahDouble"]:checked');
+  const hamzahVal = hamzahRadio ? hamzahRadio.value : '';
+
   const cat = els.cat.value;
-  const deriv = els.deriv.value;
-  const trans = els.trans.value;
-
-  const selectedPatterns = Array.from(document.querySelectorAll('#list8 input[type="checkbox"]:checked'))
-                                 .map(cb => cb.value);
-
-  const letter1 = document.getElementById('letter1')?.value || '';
-  const letter2 = document.getElementById('letter2')?.value || '';
-  const letter3 = document.getElementById('letter3')?.value || '';
-
-  const vowelToggle = document.getElementById('vowelToggle');
-  const showVowelOnly = vowelToggle ? vowelToggle.checked : false;
-
-  const doubleToggle = document.getElementById('doubleToggle');
-  const doubleChecked = doubleToggle ? doubleToggle.checked : false;
-
+  const showVowelOnly = document.getElementById('vowelToggle')?.checked || false;
   const vowelPosition = document.getElementById('vowelPositionSelect')?.value || '';
   const vowelType = document.getElementById('vowelTypeSelect')?.value || '';
   const vowelPattern = document.getElementById('vowelPatternSelect')?.value || '';
 
-  const opt40 = getCheckedState('Opt40');
-  const opt41 = getCheckedState('Opt41');
-  const opt42 = getCheckedState('Opt42');
-  const opt43 = getCheckedState('Opt43');
-
-  if (cat === "tri"){
-    if (showVowelOnly){
+  if (cat === "tri") {
+    if (showVowelOnly) {
       setOpacityByID(circle2, "Vowel");
 
-      if(vowelPosition === 'start'){
+      if (vowelPosition === 'start') {
         setOpacityByID(circle2, "V1");
-        if (vowelType === 'o'){
+        if (vowelType === 'o') {
           setOpacityByID(circle2, "V1-1");
-          if (opt42){
-            setOpacityByID(circle2, "V1-1-1");
-          }
-          if (opt43){
-            setOpacityByID(circle2, "V1-1-2");
-          }
-          if (opt41){
-            setOpacityByID(circle2, "V1-1-3");
-          }
-
-        } else if (vowelType === 'i'){
-          setOpacityByID(circle2, "V1-2")
-          if (opt43){
-            setOpacityByID(circle2, "V1-2-1");
-          }
-          if (opt41){
-            setOpacityByID(circle2, "V1-2-2");
-          }
+          if (hamzahVal === 'opt42') setOpacityByID(circle2, "V1-1-1");
+          else if (hamzahVal === 'opt43') setOpacityByID(circle2, "V1-1-2");
+          else if (hamzahVal === 'opt41') setOpacityByID(circle2, "V1-1-3");
+        } else if (vowelType === 'i') {
+          setOpacityByID(circle2, "V1-2");
+          if (hamzahVal === 'opt43') setOpacityByID(circle2, "V1-2-1");
+          else if (hamzahVal === 'opt41') setOpacityByID(circle2, "V1-2-2");
         }
-
-      } else if (vowelPosition === 'middle'){
+      } else if (vowelPosition === 'middle') {
         setOpacityByID(circle2, "V2");
-        if (vowelType === 'o'){
+        if (vowelType === 'o') {
           setOpacityByID(circle2, "V2-1");
-          if (opt42){
-            setOpacityByID(circle2, "V2-1-1");
-          }
-          if (opt40){
-            setOpacityByID(circle2, "V2-1-2");
-          }
-
-        } else if (vowelType === 'i'){
-          setOpacityByID(circle2, "V2-2")
-          if (opt42){
-            setOpacityByID(circle2, "V2-2-2");
-          }
-          if (opt40){
-            setOpacityByID(circle2, "V2-2-1");
-          }
+          if (hamzahVal === 'opt42') setOpacityByID(circle2, "V2-1-1");
+          else if (hamzahVal === 'opt40') setOpacityByID(circle2, "V2-1-2");
+        } else if (vowelType === 'i') {
+          setOpacityByID(circle2, "V2-2");
+          if (hamzahVal === 'opt42') setOpacityByID(circle2, "V2-2-2");
+          else if (hamzahVal === 'opt40') setOpacityByID(circle2, "V2-2-1");
         }
-
-      } else if (vowelPosition === 'end'){
+      } else if (vowelPosition === 'end') {
         setOpacityByID(circle2, "V3");
-        if (vowelType === 'o'){
+        if (vowelType === 'o') {
           setOpacityByID(circle2, "V3-1");
-          if (opt40){
-            setOpacityByID(circle2, "V3-1-1");
-          }
-          if (opt41){
-            setOpacityByID(circle2, "V3-1-2");
-          }
-
-        } else if (vowelType === 'i'){
-          setOpacityByID(circle2, "V3-2")
-          if (opt40){
-            setOpacityByID(circle2, "V3-2-1");
-          }
-          if (opt41){
-            setOpacityByID(circle2, "V3-2-2");
-          }
+          if (hamzahVal === 'opt40') setOpacityByID(circle2, "V3-1-1");
+          else if (hamzahVal === 'opt41') setOpacityByID(circle2, "V3-1-2");
+        } else if (vowelType === 'i') {
+          setOpacityByID(circle2, "V3-2");
+          if (hamzahVal === 'opt40') setOpacityByID(circle2, "V3-2-1");
+          else if (hamzahVal === 'opt41') setOpacityByID(circle2, "V3-2-2");
         }
-
-      } else if (vowelPosition === 'double'){
+      } else if (vowelPosition === 'double') {
         setOpacityByID(circle2, "V4");
-        if (vowelPattern === "seperate"){
+        if (vowelPattern === "seperate") {
           setOpacityByID(circle2, "V4-1");
-          if (opt41){
-            setOpacityByID(circle2, "V4-1-1");
-          }
-        } else if (vowelPattern === "grouped"){
+          if (hamzahVal === 'opt41') setOpacityByID(circle2, "V4-1-1");
+        } else if (vowelPattern === "grouped") {
           setOpacityByID(circle2, "V4-2");
-          if (opt40){
-            setOpacityByID(circle2, "V4-2-1");
-          }
+          if (hamzahVal === 'opt40') setOpacityByID(circle2, "V4-2-1");
         }
       }
     } else {
+      // No-vowel branch
       setOpacityByID(circle2, "No-vowel");
-      if (!opt40 && !opt41 && !opt42 && !opt43){
+      if (!hamzahVal) {
         setOpacityByID(circle2, "NV3");
       } else {
-        if (opt40){
-          setOpacityByID(circle2, "NV2");
-          if(opt42){
-            setOpacityByID(circle2, "NV2-4");
-          } else if (!opt41){
-            setOpacityByID(circle2, "NV2-3");
-            if (opt43){
-              setOpacityByID(circle2, "NV2-3-1");
-            }
-          }
-        } else if (opt41){
-          setOpacityByID(circle2, "NV2");
-          setOpacityByID(circle2, "NV2-2");
-        } else if (opt42){
-          setOpacityByID(circle2, "NV2");
-          setOpacityByID(circle2, "NV2-1");
-        } else if (opt43){
-          setOpacityByID(circle2, "NV1");
-        }
+        if (hamzahVal === 'opt40') setOpacityByID(circle2, "NV2");
+        else if (hamzahVal === 'opt41') setOpacityByID(circle2, "NV2-2");
+        else if (hamzahVal === 'opt42') setOpacityByID(circle2, "NV2-1");
+        else if (hamzahVal === 'opt43') setOpacityByID(circle2, "NV1");
+        // Additional sub‑paths can be added if needed, but with single selection we stop here.
       }
     }
   }
