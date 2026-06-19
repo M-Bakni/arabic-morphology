@@ -278,10 +278,10 @@ function updateList6() {
           <option value="i">الياء</option>
         </select>
       </p>
-      <div id="wrapOpt40"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
-      <div id="wrapOpt41"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
-      <div id="wrapOpt42"><label><input type="checkbox" id="Opt42">مهموز اللام</label></div>
-      <div id="wrapOpt43"><label><input type="checkbox" id="Opt43">مُضعَّف</label></div>
+      <div id="wrapOpt40" style="display:none;"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
+      <div id="wrapOpt41" style="display:none;"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
+      <div id="wrapOpt42" style="display:none;"><label><input type="checkbox" id="Opt42">مهموز اللام</label></div>
+      <div id="wrapOpt43" style="display:none;"><label><input type="checkbox" id="Opt43">مُضعَّف</label></div>
     </div>
     <div id="patternContainer" style="display: none;">
       <p>نوع اللفيف 
@@ -291,8 +291,8 @@ function updateList6() {
           <option value="seperate">مفروق</option>
         </select>
       </p>
-      <div id="wrapOpt40p"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
-      <div id="wrapOpt41p"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
+      <div id="wrapOpt40p" style="display:none;"><label><input type="checkbox" id="Opt40">مهموز الفاء</label></div>
+      <div id="wrapOpt41p" style="display:none;"><label><input type="checkbox" id="Opt41">مهموز العين</label></div>
     </div>
   `;
 
@@ -303,51 +303,64 @@ function updateList6() {
   const vowelType = document.getElementById('vowelTypeSelect');
   const vowelPattern = document.getElementById('vowelPatternSelect');
 
-  // Update checkbox visibility in vowel-type container (no gaps because we hide the entire div wrapper)
-  function updateVowelCheckboxes(position) {
+  // ----- Helper: update checkboxes inside vowel-type container -----
+  function updateVowelCheckboxes() {
+    const pos = vowelPosition ? vowelPosition.value : '';
+    const typeVal = vowelType ? vowelType.value : '';
+
+    // Hide all wrappers first
     const w40 = document.getElementById('wrapOpt40');
     const w41 = document.getElementById('wrapOpt41');
     const w42 = document.getElementById('wrapOpt42');
     const w43 = document.getElementById('wrapOpt43');
     if (!w40) return;
 
-    // Hide all wrappers first (removes their space completely)
+    // Default: all hidden
     w40.style.display = 'none';
     w41.style.display = 'none';
     w42.style.display = 'none';
     w43.style.display = 'none';
 
-    if (position === 'start') {
-      w41.style.display = ''; // Opt41
-      w42.style.display = ''; // Opt42
-      w43.style.display = ''; // Opt43
-    } else if (position === 'middle') {
-      w40.style.display = ''; // Opt40
-      w42.style.display = ''; // Opt42
-    } else if (position === 'end') {
-      w40.style.display = ''; // Opt40
-      w41.style.display = ''; // Opt41
+    // Only show checkboxes if a position is selected, it's not "double", AND a vowel type is chosen
+    if (pos && pos !== 'double' && typeVal) {
+      if (pos === 'start') {
+        w41.style.display = ''; // Opt41
+        w42.style.display = ''; // Opt42
+        w43.style.display = ''; // Opt43
+      } else if (pos === 'middle') {
+        w40.style.display = ''; // Opt40
+        w42.style.display = ''; // Opt42
+      } else if (pos === 'end') {
+        w40.style.display = ''; // Opt40
+        w41.style.display = ''; // Opt41
+      }
     }
-    // For empty or double: all remain hidden
   }
 
-  // Update checkbox visibility in pattern container (no gaps)
-  function updatePatternCheckboxes(pattern) {
+  // ----- Helper: update checkboxes inside pattern container -----
+  function updatePatternCheckboxes() {
+    const pos = vowelPosition ? vowelPosition.value : '';
+    const patVal = vowelPattern ? vowelPattern.value : '';
+
     const w40p = document.getElementById('wrapOpt40p');
     const w41p = document.getElementById('wrapOpt41p');
     if (!w40p) return;
 
+    // Hide both
     w40p.style.display = 'none';
     w41p.style.display = 'none';
 
-    if (pattern === 'grouped') {
-      w40p.style.display = '';
-    } else if (pattern === 'seperate') {
-      w41p.style.display = '';
+    // Only show if position is "double" and a pattern is chosen
+    if (pos === 'double' && patVal) {
+      if (patVal === 'grouped') {
+        w40p.style.display = '';
+      } else if (patVal === 'seperate') {
+        w41p.style.display = '';
+      }
     }
   }
 
-  // Main handler for position change
+  // ----- Main handler for position change -----
   function handlePositionChange() {
     const val = vowelPosition ? vowelPosition.value : '';
 
@@ -359,49 +372,42 @@ function updateList6() {
       patternContainer.style.display = (val === 'double') ? 'block' : 'none';
     }
 
-    // Update checkboxes inside vowel-type container
-    updateVowelCheckboxes(val);
-
-    // Handle pattern container checkboxes
-    if (val === 'double' && vowelPattern) {
-      updatePatternCheckboxes(vowelPattern.value);
-    } else {
-      // Hide pattern checkboxes if not in double mode
-      const w40p = document.getElementById('wrapOpt40p');
-      const w41p = document.getElementById('wrapOpt41p');
-      if (w40p) w40p.style.display = 'none';
-      if (w41p) w41p.style.display = 'none';
-    }
+    // Update checkboxes based on current dropdown values
+    updateVowelCheckboxes();
+    updatePatternCheckboxes();
 
     applyFilters();
   }
 
-  // Handler for pattern dropdown change
-  function handlePatternChange() {
-    if (vowelPosition && vowelPosition.value === 'double') {
-      updatePatternCheckboxes(vowelPattern.value);
-      applyFilters();
-    }
+  // ----- Handlers for dropdown changes (vowel type & pattern) -----
+  function onVowelTypeChange() {
+    updateVowelCheckboxes();
+    applyFilters();
   }
 
-  // Attach events
+  function onPatternChange() {
+    updatePatternCheckboxes();
+    applyFilters();
+  }
+
+  // ----- Attach events -----
   if (vowelPosition) {
     vowelPosition.removeEventListener('change', handlePositionChange);
     vowelPosition.addEventListener('change', handlePositionChange);
-    handlePositionChange(); // apply initial state
-  }
-
-  if (vowelPattern) {
-    vowelPattern.removeEventListener('change', handlePatternChange);
-    vowelPattern.addEventListener('change', handlePatternChange);
+    handlePositionChange();
   }
 
   if (vowelType) {
-    vowelType.removeEventListener('change', applyFilters);
-    vowelType.addEventListener('change', applyFilters);
+    vowelType.removeEventListener('change', onVowelTypeChange);
+    vowelType.addEventListener('change', onVowelTypeChange);
   }
 
-  // Attach to all checkboxes inside list6
+  if (vowelPattern) {
+    vowelPattern.removeEventListener('change', onPatternChange);
+    vowelPattern.addEventListener('change', onPatternChange);
+  }
+
+  // Attach listeners to all checkboxes
   list6.querySelectorAll('input[type="checkbox"]').forEach(el => {
     el.removeEventListener('change', applyFilters);
     el.addEventListener('change', applyFilters);
