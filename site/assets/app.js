@@ -260,11 +260,11 @@ function updateList6() {
         </p>
         <div id="hamzaSubOptions" style="display:none;">
           <div><label><input type="radio" name="hamzaSub" value="" checked> الكل</label></div>
-          <div><label><input type="radio" name="hamzaSub" value="sub1"> خيار 1</label></div>
-          <div><label><input type="radio" name="hamzaSub" value="sub2"> خيار 2</label></div>
-          <div><label><input type="radio" name="hamzaSub" value="sub3"> خيار 3</label></div>
-          <div><label><input type="radio" name="hamzaSub" value="sub4"> خيار 4</label></div>
-          <div><label><input type="radio" name="hamzaSub" value="sub5"> خيار 5</label></div>
+          <div><label><input type="radio" name="hamzaSub" value="sub1">مهموز الفاء واللام</label></div>
+          <div><label><input type="radio" name="hamzaSub" value="sub2">مهموز الفاء</label></div>
+          <div><label><input type="radio" name="hamzaSub" value="sub3">مهموز الفاء مُضعف</label></div>
+          <div><label><input type="radio" name="hamzaSub" value="sub4">مهموز العين</label></div>
+          <div><label><input type="radio" name="hamzaSub" value="sub5">مهموز اللام</label></div>
         </div>
       </div>
     `;
