@@ -253,9 +253,9 @@ function updateList6() {
         <p>
           <select id="NVType">
             <option value="">اختر نوع الفعل الصحيح</option>
+            <option value="opt3">سالم</option>
             <option value="opt1">مهموز</option>
             <option value="opt2">مُضعَّف</option>
-            <option value="opt3">سالم</option>
           </select>
         </p>
         <div id="hamzaSubOptions" style="display:none;">
