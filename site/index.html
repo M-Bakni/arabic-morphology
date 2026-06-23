@@ -29,10 +29,10 @@
 
         <div class="filters">
           <input type="text" id="search" placeholder="ابحث في الجذر أو الفعل…" />
-          <select id="filterCat" aria-label="ثلاثي أو رباعي"><option value="">عدد حروف الجذر</option></select> <!--ثلاثي/رباعي-->
-          <select id="filterDeriv" aria-label="مجرّد أو مزيد"><option value="">التجرُّد والزيادة</option></select> <!--مجرّد/مزيد-->
-          <select id="filterTrans" aria-label="التعدية"><option value="">اللزوم والتعدية</option></select> <!--اللزوم والتعدية-->
-          <button id="resetFilters" type="button">إعادة ضبط</button> <!--تصفير-->
+          <select id="filterCat" aria-label="ثلاثي أو رباعي"><option value="">عدد حروف الجذر</option></select>
+          <span id="derivContainer"><select id="filterDeriv" aria-label="مجرّد أو مزيد"><option value="">التجرُّد والزيادة</option></select></span>
+          <select id="filterTrans" aria-label="التعدية"><option value="">اللزوم والتعدية</option></select>
+          <button id="resetFilters" type="button">إعادة ضبط</button>
           <span class="counter" id="counter"></span>
         </div>
         <div class="dynamic-filter">
@@ -43,7 +43,7 @@
         </div>
         <div class="image-container">
           <img src="Circle 2.svg" alt="wheel?" height="43vh" width="43vh"/>
-          <img src="Circle 1.svg" alt="wheel?" height="43vh" width="43vh"/>  
+          <img src="Circle 1.svg" alt="wheel?" height="43vh" width="43vh"/>
         </div>
       </section>
       <section class="data-panel">
