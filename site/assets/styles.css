@@ -84,13 +84,13 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   background: var(--surface); border: 1px solid var(--border);
   border-radius: 12px; padding: 16px;
   display: grid; grid-template-columns: 55% 45%;
-  height: 85vh;
+  height: auto;
 }
 .panel-stats {grid-column: 1; font-size: 0.95rem; margin-bottom: 12px; }
 
 .control-panel {
   display: grid;
-  grid-template-rows: 4% 10% 33% 40%;
+  grid-template-rows: 4% 10% 33% auto;
 }
 .data-panel {
   display: grid;
@@ -218,6 +218,7 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   display: grid;
   padding-right: 5%;
   grid-template-columns: 50% 50%;
+  align-items: end;
 }
 /* Filters */
 .filters {
