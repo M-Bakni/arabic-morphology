@@ -946,8 +946,10 @@ function SVGFilters() {
   if (cat === "tri") {
     if (showVowelOnly) {
       setOpacityByID(circle2, "Vowel");
+      setOpacityByID(circle2, "Vtext0");
       if (vowelPosition === 'start') {
         setOpacityByID(circle2, "V1");
+        setOpacityByID(circle2, "Vtext1");
         if (vowelType === 'o') {
           setOpacityByID(circle2, "V1-1");
           if (hamzahVal === 'opt42') setOpacityByID(circle2, "V1-1-1");
@@ -960,6 +962,7 @@ function SVGFilters() {
         }
       } else if (vowelPosition === 'middle') {
         setOpacityByID(circle2, "V2");
+        setOpacityByID(circle2, "Vtext2");
         if (vowelType === 'o') {
           setOpacityByID(circle2, "V2-1");
           if (hamzahVal === 'opt42') setOpacityByID(circle2, "V2-1-1");
@@ -971,6 +974,7 @@ function SVGFilters() {
         }
       } else if (vowelPosition === 'end') {
         setOpacityByID(circle2, "V3");
+        setOpacityByID(circle2, "Vtext3");
         if (vowelType === 'o') {
           setOpacityByID(circle2, "V3-1");
           if (hamzahVal === 'opt40') setOpacityByID(circle2, "V3-1-1");
@@ -982,6 +986,7 @@ function SVGFilters() {
         }
       } else if (vowelPosition === 'double') {
         setOpacityByID(circle2, "V4");
+        setOpacityByID(circle2, "Vtext4");
         if (vowelPattern === "seperate") {
           setOpacityByID(circle2, "V4-1");
           if (hamzahVal === 'opt41') setOpacityByID(circle2, "V4-1-1");
@@ -992,9 +997,11 @@ function SVGFilters() {
       }
     } else {
       setOpacityByID(circle2, "No-vowel");
+      setOpacityByID(circle2, "NVtext0");
       if (nvTypeVal !== '') {
         if (nvTypeVal === 'opt1'){
           setOpacityByID(circle2, "NV2");
+          setOpacityByID(circle2, "NVtext2");
           if (hamzaSubVal === 'sub1') {
             setOpacityByID(circle2, "NV2-4")
           } else if (hamzaSubVal === 'sub2') {
@@ -1008,8 +1015,14 @@ function SVGFilters() {
             setOpacityByID(circle2, "NV2-1")
           } 
         }
-        else if (nvTypeVal === 'opt2') setOpacityByID(circle2, "NV1");
-        else if (nvTypeVal === 'opt3') setOpacityByID(circle2, "NV3");
+        else if (nvTypeVal === 'opt2') {
+          setOpacityByID(circle2, "NV1")
+          setOpacityByID(circle2, "NVtext3");
+        }
+        else if (nvTypeVal === 'opt3') {
+          setOpacityByID(circle2, "NV3")
+          setOpacityByID(circle2, "NVtext1");
+        }
       }
     }
   }
