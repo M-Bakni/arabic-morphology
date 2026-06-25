@@ -57,7 +57,7 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   grid-column: 1;
   grid-row: 1 / 3;
   margin: 0;
-  font-size: 1.5rem;
+  font-size: 2rem;
 }
 
 .site-header .intro {
@@ -116,6 +116,7 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 
 #list2 {
   text-align: center;
+  padding-bottom: 5px;
 }
 
 #list7 {
@@ -123,14 +124,24 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 }
 
 #list8 {
+  display: inline-flex;
+  flex-direction: column;
+  flex-wrap: wrap;
+  align-content: flex-start;
+
   height: fit-content;
+  min-height: 0;
   max-height: 25vh;
-  column-count: 2;
-  column-gap: 1.5rem;
-  overflow-y: auto;
+
   padding: 0.5rem;
   border: 1px solid #ddd;
   border-radius: 4px;
+
+  gap: 1px 1px;
+}
+
+#list8 > * {
+  height: 6px;
 }
 
 /* Download button */
@@ -224,6 +235,7 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 
 .control-box {
   height: 25vh;
+  min-height: fit-content;
   padding-left: 10px;
   padding-right: 10px;
   border: 1px solid var(--border); border-radius: 8px; background: #fff; color: var(--ink);
