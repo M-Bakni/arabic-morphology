@@ -128,17 +128,15 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   flex-direction: column;
   flex-wrap: wrap;
   align-content: flex-start;
-
   height: fit-content;
   min-height: 0;
   max-height: 25vh;
-
   padding: 0.5rem;
-  gap: 1px 1px;
+  gap: 0px 5px;
 }
 
 #list8 > * {
-  height: 6px;
+  height: auto;
 }
 
 /* Download button */
