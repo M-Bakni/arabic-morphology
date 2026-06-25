@@ -307,9 +307,9 @@ export async function downloadTableAsJSON() {
     let jsonContent = JSON.stringify(jsonData, null, 2);
 
     downloadFile(jsonContent, `arabic-verbs-${timestamp}.json`, 'application/json');
-    alert(`تم تحميل ${filteredData.length} صف بنجاح`);
+    alert(`Number of verbs downloaded: ${filteredData.length}`);
   } catch (error) {
-    alert('حدث خطأ: ' + error.message);
+    alert('Error: ' + error.message);
   } finally {
     removeLoadingMessage(loadingMsg);
   }
