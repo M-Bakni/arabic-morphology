@@ -355,7 +355,7 @@ export async function downloadTableAsTXT() {
 
     const timestamp = new Date().toISOString().slice(0, 19).replace(/:/g, '-');
     downloadFile(txtContent, `arabic-verbs-${timestamp}.txt`, 'text/plain');
-    alert(`Number of verbs downloaded: ${filteredData.length} صف بنجاح`);
+    alert(`Number of verbs downloaded: ${filteredData.length}`);
   } catch (error) {
     alert('حدث خطأ: ' + error.message);
   } finally {
