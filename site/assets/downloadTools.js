@@ -129,7 +129,7 @@ function applyFilters(data, filters) {
       if (!verbNorm.includes(search) && !rootNorm.includes(search)) return false;
     }
 
-    if (selectedPatterns.length > 0 && !(selectedPatterns.includes(String(r[FIELD.pattern])) &&  (cat == "quadri" || (cat === "tri" && (showVowelOnly === (r[FIELD.root].includes("و") ||  r[FIELD.root].includes("ي"))))))) return false;
+    if (selectedPatterns.length > 0 && !(selectedPatterns.includes(String(r.pattern)) &&  (cat == "quadri" || (cat === "tri" && (showVowelOnly === (r.root.includes("و") ||  r.root.includes("ي"))))))) return false;
     
     const root = r.root || '';
     const rootLength = root.length;
@@ -235,7 +235,6 @@ function convertToCSV(data) {
 }
 
 export async function downloadTableAsCSV() {
-  const loadingMsg = showLoadingMessage('جاري تحميل البيانات...');
 
   try {
     const allData = await loadOriginalData();
@@ -263,7 +262,7 @@ export async function downloadTableAsCSV() {
     csvContent += "\n\n# CSV LICENSE HERE"; //----------LICENSE!!!!!---------------
 
     downloadFile(csvContent, `arabic-verbs-${timestamp}.csv`, 'text/csv');
-    // alert(`Number of verbs downloaded: ${filteredData.length});
+     alert('Number of verbs downloaded: ${filteredData.length}');
   } catch (error) {
     console.error('Download error:', error);
     alert('حدث خطأ: ' + error.message);
