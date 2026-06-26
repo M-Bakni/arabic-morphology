@@ -184,6 +184,7 @@ function updateList8() {
       hasOptions = true;
     }
     if (plusOne) {
+      addCheckbox(list8Options[19], 19);
       hasOptions = true;
     }
     if (plusTwo) {
@@ -596,6 +597,8 @@ function applyFilters() {
   const cat = els.cat.value;
   const deriv = els.deriv.value;
   const trans = els.trans.value;
+
+  const plusOne = document.getElementById('plusOne');
 
   const vowelToggle = document.getElementById('vowelToggle');
   const showVowelOnly = vowelToggle ? vowelToggle.checked : false;
