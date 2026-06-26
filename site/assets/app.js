@@ -633,7 +633,7 @@ function applyFilters() {
     if (deriv && r[FIELD.deriv] !== deriv) return false;
     if (trans && r[FIELD.trans] !== trans) return false;
     if (q && !normalizeArabic(r[FIELD.verb]).includes(q) && !normalizeArabic(r[FIELD.root]).includes(q)) return false;
-    if (selectedPatterns.length > 0 && !(selectedPatterns.includes(String(r[FIELD.pattern])) && showVowelOnly === (r[FIELD.root].includes("و") ||  r[FIELD.root].includes("ي")))) return false;
+    if (selectedPatterns.length > 0 && !(selectedPatterns.includes(String(r[FIELD.pattern])) &&  (cat == "quadri" || (cat === "tri" && (showVowelOnly === (r[FIELD.root].includes("و") ||  r[FIELD.root].includes("ي"))))))) return false;
 
   const root = r[FIELD.root];
   const rootLength = root.length;
