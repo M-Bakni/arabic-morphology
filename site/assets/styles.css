@@ -149,8 +149,9 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 }
 
 .download img {
-  height: 20px;
+  height: 24px;
   width: auto;
+  padding: 2px
 }
 
 .download:hover { border-color: var(--accent); }
