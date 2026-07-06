@@ -84,6 +84,14 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   flex: 0 0 auto;
 }
 
+.brand .logo-link {
+  display: inline-flex;
+  flex: 0 0 auto;
+  color: var(--accent-ink);
+  border-radius: 6px;
+}
+.brand .logo-link:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+
 .brand .logo {
   height: 52px;
   width: auto;
@@ -196,23 +204,47 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 }
 .dynamic-filter p:has(select) select { min-width: 0; }
 
-#list2 {
-  text-align: center;
-  padding-bottom: 5px;
+/* Sound/defective (صحيح/معتل) toggle: both labels are always written, flanking
+   the switch; the active one is highlighted (via :has, no JS needed). */
+.sound-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 4px 0 10px;
 }
+.sound-toggle .toggle-label {
+  font-size: 0.95rem;
+  color: var(--muted);
+  transition: color .2s, font-weight .2s;
+  user-select: none;
+}
+.sound-toggle .toggle-label-off { color: var(--accent); font-weight: 700; }
+.sound-toggle:has(#vowelToggle:checked) .toggle-label-off { color: var(--muted); font-weight: 400; }
+.sound-toggle:has(#vowelToggle:checked) .toggle-label-on { color: var(--accent); font-weight: 700; }
+
+/* The patterns box stacks its title, the augmentation checkboxes (list7) and the
+   pattern checkboxes (list8). list8 fills the remaining height and wraps its items
+   into extra columns instead of overflowing the box onto the diagram below. */
+#box7 {
+  display: flex;
+  flex-direction: column;
+  min-height: 0;
+}
+#box7 .box-title { flex: 0 0 auto; }
 
 #list7 {
   height: fit-content;
+  flex: 0 0 auto;
 }
 
 #list8 {
-  display: inline-flex;
+  display: flex;
+  flex: 1 1 0;
   flex-direction: column;
   flex-wrap: wrap;
   align-content: flex-start;
-  height: fit-content;
   min-height: 0;
-  max-height: 25vh;
   padding: 0.5rem;
   gap: 0px 5px;
 }
@@ -316,9 +348,20 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 .control-box {
   height: 25vh;
   min-height: fit-content;
-  padding-left: 10px;
-  padding-right: 10px;
+  padding: 10px;
   border: 1px solid var(--border); border-radius: 8px; background: var(--surface); color: var(--ink);
+  flex: 1 1 0;
+}
+
+/* Title for each advanced-filter box (root / sound-defective / patterns). */
+.box-title {
+  margin: 0 0 8px;
+  padding-bottom: 6px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--th-ink);
+  border-bottom: 1px solid var(--border);
+  text-align: center;
 }
 .image-container {
   display: grid;
@@ -417,7 +460,11 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   font-size: 0.9rem;
   color: var(--muted);
 }
+.site-footer p { margin: 0; }
 .site-footer a { font-weight: 600; }
+.site-footer .last-updated { margin-top: 6px; font-size: 0.82rem; opacity: 0.85; }
+.site-footer .last-updated:empty,
+.site-footer .last-updated:has(#lastUpdated:empty) { display: none; }
 
 .error { color: #b42318; padding: 16px; }
 
@@ -453,10 +500,12 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   .filters #derivContainer select { flex: 1 1 auto; width: 100%; }
   .counter { flex: 1 1 100%; margin: 0; text-align: start; }
 
-  /* Advanced filter boxes wrap instead of sitting in one fixed-height row. */
+  /* Advanced filter boxes wrap instead of sitting in one fixed-height row. On this
+     content-sized layout box7/list8 flow naturally rather than flex-filling. */
   .dynamic-filter { height: auto; padding-right: 0; flex-wrap: wrap; }
   .control-box { height: auto; min-height: 0; flex: 1 1 200px; }
-  #list8 { max-height: none; }
+  #box7 { display: block; }
+  #list8 { display: inline-flex; flex: 0 0 auto; max-height: none; }
 
   /* Diagrams keep two side-by-side (so they don't dominate vertically) and
      scale down to fit; they appear above the table per the requested order. */
@@ -506,11 +555,9 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 .switch {
   position: relative;
   display: inline-block;
-  width: 120px;
-  height: 34px;
-  border: #1f2328;
-  border-width: 2px;
-  align-self: center;
+  width: 48px;
+  height: 26px;
+  flex: 0 0 auto;
 }
 
 /* Hide default HTML checkbox */
@@ -520,42 +567,42 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
   height: 0;
 }
 
-/* The slider */
+/* The slider (plain knob — the صحيح/معتل labels are written beside the switch) */
 .slider {
   position: absolute;
   cursor: pointer;
-  text-align: center;
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  background-color: #ccc;
-  -webkit-transition: .4s;
-  transition: .4s;
+  background-color: var(--surface-2);
+  border: 1px solid var(--border);
+  -webkit-transition: .3s;
+  transition: .3s;
   border-radius: 34px;
 }
 
 .slider:before {
   position: absolute;
-  content: "صحيح";
-  height: 26px;
-  width: 65px;
-  left: 4px;
-  bottom: 4px;
-  color: #1f2328;
-  background-color: white;
-  -webkit-transition: .4s;
-  transition: .4s;
-  border-radius: 34px;
+  content: "";
+  height: 20px;
+  width: 20px;
+  left: 3px;
+  bottom: 2px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgba(0,0,0,.35);
+  -webkit-transition: .3s;
+  transition: .3s;
+  border-radius: 50%;
 }
 
 input:checked + .slider {
-  background-color: #0055d4;
+  background-color: var(--accent);
+  border-color: var(--accent);
 }
 
 input:checked + .slider:before {
-  -webkit-transform: translateX(47px);
-  -ms-transform: translateX(47px);
-  transform: translateX(47px);
-  content: "مُعتل";
+  -webkit-transform: translateX(22px);
+  -ms-transform: translateX(22px);
+  transform: translateX(22px);
 }

@@ -65,27 +65,16 @@ async function init() {
   const onChange = debounce(applyFilters, 120);
   els.search.addEventListener('input', onChange);
 
-  // Show/hide deriv dropdown based on category selection
-  function toggleDerivVisibility() {
-    const cat = els.cat.value;
-    if (derivContainer) {
-      derivContainer.style.display = cat ? '' : 'none';
-    } else {
-      // Fallback: hide the select itself (label will remain)
-      els.deriv.style.display = cat ? '' : 'none';
-    }
-  }
-
   els.cat.addEventListener('change', () => {
     if (!els.cat.value) {
       resetFilters();
     } else {
-      updateList5();  
+      updateList5();
       updateList7();
       updateList8();
       applyFilters();
     }
-    toggleDerivVisibility();
+    toggleContextualFilters();
     updateControlBoxBorders();
   });
 
@@ -107,13 +96,22 @@ async function init() {
   }
 
   // Initial visibility
-  toggleDerivVisibility();
+  toggleContextualFilters();
 
   // Initial build
   updateList5();
   updateList7();
   applyFilters();
   updateControlBoxBorders();
+}
+
+// Show the "التجرُّد والزيادة" (deriv) and "اللزوم والتعدية" (trans) dropdowns only
+// once a root category is chosen; hide them otherwise (initial load and reset).
+function toggleContextualFilters() {
+  const hasCat = !!els.cat.value;
+  if (derivContainer) derivContainer.style.display = hasCat ? '' : 'none';
+  else els.deriv.style.display = hasCat ? '' : 'none';
+  els.trans.style.display = hasCat ? '' : 'none';
 }
 
 // ----- Helper: populate letter dropdowns -----
@@ -202,15 +200,17 @@ function updateList8() {
   updateControlBoxBorders();
 }
 
-// ----- Update list5 (root letters and vowel toggle) -----
+// ----- Update list5 (root letters) and the sound/defective toggle -----
 function updateList5() {
   const cat = els.cat?.value || '';
   const list5 = document.getElementById('list5');
   const list6 = document.getElementById('list6');
+  const toggleHost = document.getElementById('list2host');
   if (!list5) return;
 
-  // Clear list6 for a fresh start
+  // Clear list6 and the toggle host for a fresh start
   if (list6) list6.innerHTML = '';
+  if (toggleHost) toggleHost.innerHTML = '';
 
   if (cat === 'tri') {
     list5.innerHTML = `
@@ -219,13 +219,22 @@ function updateList5() {
         <p>الحرف الأوسط <select id="letter2"></select></p>
         <p>الحرف الأخير <select id="letter3"></select></p>
       </section>
-      <section id="list2">
-        <label class="switch">
-          <input type="checkbox" id="vowelToggle">
-          <span class="slider"></span>
-        </label>
-      </section>
     `;
+    // The صحيح/معتل toggle lives in the "خيارات الفعل الصحيح-المعتل" box (box6),
+    // above its sub-options (list6). Both labels are always shown; the active one
+    // is highlighted via CSS (:has). It is only rendered for triliteral roots.
+    if (toggleHost) {
+      toggleHost.innerHTML = `
+        <div class="sound-toggle" id="list2">
+          <span class="toggle-label toggle-label-off">صحيح</span>
+          <label class="switch">
+            <input type="checkbox" id="vowelToggle">
+            <span class="slider"></span>
+          </label>
+          <span class="toggle-label toggle-label-on">معتل</span>
+        </div>
+      `;
+    }
     populateLetterDropdowns();
 
     // Attach listener to vowel toggle
@@ -253,12 +262,14 @@ function updateList5() {
       doubleToggle.addEventListener('change', applyFilters);
     }
 
-    // For quadri, list6 is empty
+    // For quadri, there is no sound/defective toggle and list6 is empty
     if (list6) list6.innerHTML = '';
+    updateControlBoxBorders();
 
   } else {
     list5.innerHTML = '';
     if (list6) list6.innerHTML = '';
+    updateControlBoxBorders();
     return;
   }
 
@@ -554,14 +565,21 @@ function attachLetterListeners() {
   });
 }
 
-// ----- Hide empty boxes -----
+// ----- Hide a control box (with its title) when it has no active content -----
 function updateControlBoxBorders() {
-  ['list5', 'list6', 'list7', 'list8'].forEach(id => {
-    const el = document.getElementById(id);
-    if (el) {
-      const isEmpty = el.children.length === 0 && el.innerText.trim() === '';
-      el.style.border = isEmpty ? 'none' : '';
-    }
+  const boxes = {
+    box5: ['list5'],
+    box6: ['list2host', 'list6'],
+    box7: ['list7', 'list8'],
+  };
+  Object.entries(boxes).forEach(([boxId, listIds]) => {
+    const box = document.getElementById(boxId);
+    if (!box) return;
+    const isEmpty = listIds.every(id => {
+      const el = document.getElementById(id);
+      return !el || (el.children.length === 0 && el.innerText.trim() === '');
+    });
+    box.style.display = isEmpty ? 'none' : '';
   });
 }
 
@@ -777,6 +795,8 @@ function resetFilters() {
   table.setSortIndicator(null, 1);
   updateList5();
   updateList7();
+  toggleContextualFilters();
+  updateControlBoxBorders();
   applyFilters();
 }
 
