@@ -126,6 +126,14 @@ main.wrap { padding-top: 16px; padding-bottom: 48px; }
 }
 
 /* Theme switch — automatic / light / dark segmented control */
+/* The ecosystem menu button sits on the coloured header, like the theme switch. */
+.site-header ecosystem-switcher {
+  flex: 0 0 auto;
+  align-self: flex-start;
+  --es-btn-text: var(--accent-ink);
+  --es-btn-hover: rgba(255, 255, 255, 0.15);
+}
+
 .theme-switch {
   flex: 0 0 auto;
   align-self: flex-start;
