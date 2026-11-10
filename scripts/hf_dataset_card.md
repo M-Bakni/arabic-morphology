@@ -48,7 +48,7 @@ from datasets import load_dataset
 
 verbs = load_dataset("m-bakni/arabic-morphology", split="train")  # $verbs rows
 
-form_x = verbs.filter(lambda v: v["form"] == "Form X")  # استفعل
+form_x = verbs.filter(lambda v: v["form"] == "X")  # استفعل
 transitive = verbs.filter(lambda v: v["transitivity"] == "transitive")
 
 # One of the four tables as published, one row per root:
@@ -87,20 +87,20 @@ One row per verb: every non-empty cell of the four tables, with the verb written
 | `root` | string | Root, e.g. `أبب` |
 | `root_type` | string | `triliteral` (ثلاثي) or `quadriliteral` (رباعي) |
 | `augmentation` | string | `bare` (مجرد) or `augmented` (مزيد) |
-| `form` | string | Verb form, labelled as in Arabic Wiktionary's [conjugation template](https://ar.wiktionary.org/wiki/قالب:تصريف), e.g. `Form I/a~u`, `Form X`, `Form IIq`; see below |
+| `form` | string | Verb form, labelled as in Arabic Wiktionary's [conjugation template](https://ar.wiktionary.org/wiki/قالب:تصريف), e.g. `I/a~u`, `X`, `IIq`; see below |
 | `pattern` | string | Pattern (وزن), as in the column headers of the tables, e.g. `استفعل`; for bare triliteral verbs, the past and present vowel pattern (باب), e.g. `فعَل يفعُل` |
 | `transitivity` | string | `intransitive`, `transitive` or `both` |
 | `transitivity_code` | string | The same, as in the tables: `ل`, `م` or `ك` |
 | `verb_type` | string | For bare triliteral verbs only, the class of the verb by its root letters, e.g. `صحيح سالم`, `صحيح مضعف`, `معتل أجوف واوي`; null otherwise |
 
-Patterns and forms. In `Form I/a~u`, the letters after the slash are the middle vowels of the past and the present tense: فَعَلَ يَفْعُلُ.
+Patterns and forms. In `I/a~u`, the letters after the slash are the middle vowels of the past and the present tense: فَعَلَ يَفْعُلُ.
 
 | Root | Augmentation | Patterns (`form`) |
 |:---|:---|:---|
-| triliteral | bare | `فعَل يفعُل` (`Form I/a~u`), `فعَل يفعِل` (`Form I/a~i`), `فعَل يفعَل` (`Form I/a~a`), `فعِل يفعَل` (`Form I/i~a`), `فعُل يفعُل` (`Form I/u~u`), `فعِل يفعِل` (`Form I/i~i`) |
-| triliteral | augmented | `فعّل` (`Form II`), `فاعل` (`Form III`), `أفعل` (`Form IV`), `تفعّل` (`Form V`), `تفاعل` (`Form VI`), `انفعل` (`Form VII`), `افتعل` (`Form VIII`), `افعلّ` (`Form IX`), `استفعل` (`Form X`), `افعالّ` (`Form XI`), `افعوعل` (`Form XII`), `افعوّل` (`Form XIII`) |
-| quadriliteral | bare | `فَعْلَلَ` (`Form Iq`) |
-| quadriliteral | augmented | `تفعلل` (`Form IIq`), `افعنلل` (`Form IIIq`), `افعللّ` (`Form IVq`) |
+| triliteral | bare | `فعَل يفعُل` (`I/a~u`), `فعَل يفعِل` (`I/a~i`), `فعَل يفعَل` (`I/a~a`), `فعِل يفعَل` (`I/i~a`), `فعُل يفعُل` (`I/u~u`), `فعِل يفعِل` (`I/i~i`) |
+| triliteral | augmented | `فعّل` (`II`), `فاعل` (`III`), `أفعل` (`IV`), `تفعّل` (`V`), `تفاعل` (`VI`), `انفعل` (`VII`), `افتعل` (`VIII`), `افعلّ` (`IX`), `استفعل` (`X`), `افعالّ` (`XI`), `افعوعل` (`XII`), `افعوّل` (`XIII`) |
+| quadriliteral | bare | `فَعْلَلَ` (`Iq`) |
+| quadriliteral | augmented | `تفعلل` (`IIq`), `افعنلل` (`IIIq`), `افعللّ` (`IVq`) |
 
 ### The four tables (configs `triliteral_bare`, `triliteral_augmented`, `quadriliteral_bare`, `quadriliteral_augmented`)
 
