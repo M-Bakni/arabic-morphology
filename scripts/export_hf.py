@@ -63,7 +63,7 @@ class Table:
     root_type: str  # triliteral | quadriliteral
     augmentation: str  # bare | augmented
     site_key: tuple[str, str]  # (cat, deriv) in site/verbs.json
-    forms: dict[str, str]  # pattern header -> conventional Form number
+    forms: dict[str, str]  # pattern header -> form label, as in ar.wiktionary's قالب:تصريف
 
     @property
     def csv_path(self) -> Path:
@@ -82,12 +82,12 @@ TABLES = [
         "bare",
         ("tri", "basic"),
         {
-            "فعَل يفعُل": "I",
-            "فعَل يفعِل": "I",
-            "فعَل يفعَل": "I",
-            "فعِل يفعَل": "I",
-            "فعُل يفعُل": "I",
-            "فعِل يفعِل": "I",
+            "فعَل يفعُل": "Form I/a~u",
+            "فعَل يفعِل": "Form I/a~i",
+            "فعَل يفعَل": "Form I/a~a",
+            "فعِل يفعَل": "Form I/i~a",
+            "فعُل يفعُل": "Form I/u~u",
+            "فعِل يفعِل": "Form I/i~i",
         },
     ),
     Table(
@@ -97,18 +97,18 @@ TABLES = [
         "augmented",
         ("tri", "deriv"),
         {
-            "أفعل": "IV",
-            "فعّل": "II",
-            "فاعل": "III",
-            "انفعل": "VII",
-            "افتعل": "VIII",
-            "افعلّ": "IX",
-            "تفاعل": "VI",
-            "تفعّل": "V",
-            "استفعل": "X",
-            "افعوعل": "XII",
-            "افعوّل": "XIII",
-            "افعالّ": "XI",
+            "أفعل": "Form IV",
+            "فعّل": "Form II",
+            "فاعل": "Form III",
+            "انفعل": "Form VII",
+            "افتعل": "Form VIII",
+            "افعلّ": "Form IX",
+            "تفاعل": "Form VI",
+            "تفعّل": "Form V",
+            "استفعل": "Form X",
+            "افعوعل": "Form XII",
+            "افعوّل": "Form XIII",
+            "افعالّ": "Form XI",
         },
     ),
     Table(
@@ -117,7 +117,7 @@ TABLES = [
         "quadriliteral",
         "bare",
         ("quadri", "basic"),
-        {"فَعْلَلَ": "Iq"},
+        {"فَعْلَلَ": "Form Iq"},
     ),
     Table(
         "quadriliteral_augmented",
@@ -125,7 +125,7 @@ TABLES = [
         "quadriliteral",
         "augmented",
         ("quadri", "deriv"),
-        {"تفعلل": "IIq", "افعنلل": "IIIq", "افعللّ": "IVq"},
+        {"تفعلل": "Form IIq", "افعنلل": "Form IIIq", "افعللّ": "Form IVq"},
     ),
 ]
 
