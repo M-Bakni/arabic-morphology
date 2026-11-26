@@ -1,0 +1,46 @@
+name: Publish to Hugging Face
+
+# Mirrors the verb tables to https://huggingface.co/datasets/m-bakni/arabic-morphology
+# as Parquet (see scripts/export_hf.py) whenever they change on main.
+# Needs the HF_TOKEN secret: a fine-grained Hugging Face token with write
+# access to that one dataset. workflow_dispatch is for republishing by hand,
+# e.g. after the dataset repo was recreated.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'data/csv/**'
+      - 'data/json/**'
+      - 'site/verbs.json'
+      - 'scripts/export_hf.py'
+      - 'scripts/hf_dataset_card.md'
+      - '.github/workflows/publish-huggingface.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: huggingface
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v7
+
+      - name: Export and push
+        shell: bash
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+          MESSAGE: ${{ github.event.head_commit.message || 'Manual publish' }}
+        run: |
+          # First line of the commit message, plus the commit for traceability.
+          subject="${MESSAGE%%$'\n'*}"
+          uv run scripts/export_hf.py --push --message "$subject (${GITHUB_SHA::7})"
